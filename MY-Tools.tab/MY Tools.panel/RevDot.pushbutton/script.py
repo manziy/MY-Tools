@@ -138,6 +138,7 @@ from System.Windows import Thickness, Visibility
 from System.Windows.Media import Brushes
 from System.Windows.Controls import CheckBox
 from System.Windows.Media.Imaging import BitmapImage, BitmapCacheOption
+from System.Windows.Input import Keyboard, ModifierKeys  # <-- for Shift-click
 
 uiapp = __revit__             # type: ignore
 app   = uiapp.Application
@@ -689,6 +690,7 @@ class RevDotsUI(forms.WPFWindow):
     def __init__(self, xaml_path, ui_items, start_width_in, default_mode, default_orient, default_group_enabled, default_group_title):
         forms.WPFWindow.__init__(self, xaml_path)
         self.result = None
+        self._last_clicked_index = None  # <-- anchor for Shift-click ranges
         self._vert_default_str  = "{:.4f}".format(VERT_DEFAULT_IN)
         self._horiz_default_str = "{:.4f}".format(HORIZ_DEFAULT_IN)
         self._suppress_orient_event = True
@@ -749,8 +751,8 @@ class RevDotsUI(forms.WPFWindow):
         except:
             pass
 
-        # Populate list
-        for it in ui_items:
+        # Populate list (now with Shift-click range selection)
+        for idx, it in enumerate(ui_items):
             cb = CheckBox()
             cb.Content = it["label"]
             cb.Tag = it["stable"]
@@ -759,6 +761,28 @@ class RevDotsUI(forms.WPFWindow):
             if it["checked"]:
                 cb.Foreground = Brushes.DimGray
             self.RevList.Items.Add(cb)
+
+            # --- Shift-click range selection ---
+            def _make_click(idx_local, cb_local):
+                def _on_click(sender, args):
+                    try:
+                        shift_down = (Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift
+                    except:
+                        shift_down = False
+
+                    if shift_down and self._last_clicked_index is not None:
+                        start = min(self._last_clicked_index, idx_local)
+                        end   = max(self._last_clicked_index, idx_local)
+                        new_state = bool(cb_local.IsChecked)  # apply clicked state to the whole range
+                        for j in range(start, end + 1):
+                            item_cb = self.RevList.Items[j]
+                            item_cb.IsChecked = new_state
+
+                    # anchor for the next shift-range
+                    self._last_clicked_index = idx_local
+                return _on_click
+
+            cb.Click += _make_click(idx, cb)
 
     def on_group_toggle(self, sender, args):
         try:
