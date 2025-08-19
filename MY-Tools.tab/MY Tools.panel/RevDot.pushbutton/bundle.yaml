@@ -1,0 +1,19 @@
+title: Rev Dots
+tooltip: |
+  Updates the Sheet Index: adds one column per revision and places a centered ●
+  on sheets that include that revision. Safe to re-run. Keeps empty columns.
+  Removes columns for revisions deleted from Sheet Issues/Revisions.
+
+  Show linked-model revision dots in the main model’s Sheet Index
+
+  Match revisions first
+  In the linked model, go to Sheet Issues/Revisions and make sure the sequence order
+  and each Revision Number exactly match the main model (and that the numbering method—Per Project vs Per Sheet—matches).
+
+  Run the same tool in both files
+  Open the linked model and run the Revision Dot script/button.
+  Then open the main model and run the same script.
+
+  If a dot is missing, re-check the sequence/number alignment and re-run the tool
+  in the linked model, then in the main model. Repeat anytime you add/renumber revisions.
+author: Manzi Yang

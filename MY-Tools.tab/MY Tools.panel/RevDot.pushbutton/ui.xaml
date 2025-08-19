@@ -1,0 +1,95 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Sheet Index Revision Dots — Select Revisions"
+        SizeToContent="WidthAndHeight"
+        WindowStartupLocation="CenterScreen"
+        Background="#F8FAFC"
+        ResizeMode="NoResize"
+        FontFamily="Segoe UI"
+        FontSize="12"
+        MinWidth="600"
+        MinHeight="560">
+  <Border CornerRadius="8" BorderBrush="#E5E7EB" BorderThickness="1" Background="White">
+    <DockPanel LastChildFill="True">
+
+      <!-- Top bar (slimmer) -->
+      <Border Background="#111827" Padding="10" DockPanel.Dock="Top">
+        <StackPanel Orientation="Horizontal">
+          <Image x:Name="LogoImg" Height="30" Margin="0,0,8,0" Visibility="Collapsed"/>
+          <TextBlock Text="Sheet Index Revision Dots" Foreground="White" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center"/>
+        </StackPanel>
+      </Border>
+
+      <!-- Content (tighter margins) -->
+      <StackPanel Orientation="Vertical" Margin="12" Width="560">
+
+        <Expander Header="Formatting" IsExpanded="True" Margin="0,0,0,6">
+          <StackPanel Margin="8,6,8,8">
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+              <TextBlock Text="Column width (in):" VerticalAlignment="Center" Margin="0,0,6,0"/>
+              <TextBox x:Name="WidthBox" Width="90" Text="0.5000"/>
+              <TextBlock Text="Default 0.5000&quot; vertical / 2.0000&quot; horizontal"
+                         Foreground="#9CA3AF" Margin="6,0,0,0" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+              <TextBlock Text="Column header:" VerticalAlignment="Center" Margin="0,0,6,0"/>
+              <ComboBox x:Name="HeadingModeBox" Width="240">
+                <ComboBoxItem Content="Date &amp; Description (default)"/>
+                <ComboBoxItem Content="Date only"/>
+                <ComboBoxItem Content="Description only"/>
+              </ComboBox>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+              <TextBlock Text="Heading orientation:" VerticalAlignment="Center" Margin="0,0,6,0"/>
+              <ComboBox x:Name="OrientationBox" Width="240">
+                <ComboBoxItem Content="Vertical (default)"/>
+                <ComboBoxItem Content="Horizontal"/>
+              </ComboBox>
+            </StackPanel>
+          </StackPanel>
+        </Expander>
+
+        <Expander Header="Grouping (Revit 2023+ only)" IsExpanded="True" Margin="0,0,0,6">
+          <StackPanel Margin="8,6,8,8">
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+              <CheckBox x:Name="GroupHeadersCheck" Content="Group headers" IsChecked="True" VerticalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+              <TextBlock Text="Group title:" VerticalAlignment="Center" Margin="0,0,6,0"/>
+              <TextBox x:Name="GroupTitleBox" Width="200" Text="Revisions"/>
+              <TextBlock Text="(Revit 2023+ only)" Foreground="#9CA3AF" Margin="6,0,0,0" VerticalAlignment="Center"/>
+            </StackPanel>
+          </StackPanel>
+        </Expander>
+
+        <Expander Header="Revisions" IsExpanded="True">
+          <StackPanel Margin="8,6,8,8">
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+              <TextBlock Text="Select:" VerticalAlignment="Center" Margin="0,0,6,0"/>
+              <Button x:Name="CheckAllBtn"  Content="Check All"  Width="88" Margin="0,0,6,0"/>
+              <Button x:Name="CheckNoneBtn" Content="Check None" Width="98"/>
+            </StackPanel>
+            <Border BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="6">
+              <ListBox x:Name="RevList"
+                       Height="300"
+                       Padding="6"
+                       ScrollViewer.VerticalScrollBarVisibility="Auto" />
+            </Border>
+          </StackPanel>
+        </Expander>
+
+        <!-- Footer (tighter spacing) -->
+        <DockPanel LastChildFill="False" Margin="0,10,0,0">
+          <Button x:Name="PreviewBtn" Content="Preview" Width="96" DockPanel.Dock="Left"/>
+          <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+            <Button x:Name="CancelBtn" Content="Cancel" Width="86" Margin="0,0,6,0"/>
+            <Button x:Name="UpdateBtn" Content="Update" Width="112" Background="#111827" Foreground="White"/>
+          </StackPanel>
+        </DockPanel>
+
+      </StackPanel>
+    </DockPanel>
+  </Border>
+</Window>
