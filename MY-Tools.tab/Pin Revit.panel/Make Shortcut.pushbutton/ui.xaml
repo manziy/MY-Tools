@@ -1,0 +1,167 @@
+<Window
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Make Shortcut"
+    SizeToContent="WidthAndHeight"
+    ResizeMode="NoResize"
+    WindowStartupLocation="CenterOwner"
+    Background="White">
+
+  <!-- ============== STYLES ============== -->
+  <Window.Resources>
+    <!-- Big primary filled button (used for the top Add button) -->
+    <Style x:Key="PrimaryBtn" TargetType="Button">
+      <Setter Property="FontFamily" Value="Segoe UI"/>
+      <Setter Property="FontSize" Value="18"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="Padding" Value="16,12"/>
+      <Setter Property="MinHeight" Value="60"/>
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="Background" Value="#FFC857"/>
+      <Setter Property="BorderBrush" Value="#111827"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border CornerRadius="12"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}">
+              <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+
+    <!-- Big secondary button (used for the top Remove button) -->
+    <Style x:Key="SecondaryBtn" TargetType="Button" BasedOn="{StaticResource PrimaryBtn}">
+      <Setter Property="Foreground" Value="#111111"/>
+      <Setter Property="Background" Value="#F3F4F6"/>
+      <Setter Property="BorderBrush" Value="#111827"/>
+      <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+
+    <!-- Bottom action buttons -->
+    <Style x:Key="ActionBtn" TargetType="Button">
+      <Setter Property="FontFamily" Value="Segoe UI"/>
+      <Setter Property="FontSize" Value="14"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="Padding" Value="12,8"/>
+      <Setter Property="MinHeight" Value="40"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border CornerRadius="8" Background="{TemplateBinding Background}">
+              <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+  </Window.Resources>
+
+  <!-- ============== LAYOUT ============== -->
+  <Grid Margin="16">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>  <!-- Header -->
+      <RowDefinition Height="Auto"/>  <!-- Big Add/Remove buttons -->
+      <RowDefinition Height="Auto"/>  <!-- Hidden radios -->
+      <RowDefinition Height="*"/>     <!-- Content Panels -->
+      <RowDefinition Height="Auto"/>  <!-- Bottom action bar -->
+    </Grid.RowDefinitions>
+
+    <!-- Header -->
+    <StackPanel Grid.Row="0" Margin="0,0,0,12">
+      <TextBlock Text="Revit Pin" FontFamily="Segoe UI" FontSize="18" FontWeight="Bold" Foreground="#111111"/>
+      <TextBlock x:Name="Subheader" Text="" FontFamily="Segoe UI" FontSize="12" Foreground="#6B7280" Margin="0,2,0,6"/>
+      <TextBlock>
+        <Run Text="Active model: "/>
+        <Run x:Name="DetectedModel" Text="(detecting…)" FontWeight="SemiBold"/>
+      </TextBlock>
+      <TextBlock x:Name="PanelName" Text="" Visibility="Collapsed"/>
+    </StackPanel>
+
+    <!-- Big mode buttons -->
+    <StackPanel Grid.Row="1" Orientation="Vertical">
+      <Button x:Name="AddShortcutBtn"
+              Content="Add Shortcut"
+              Margin="0,0,0,10"
+              Click="mode_add">
+        <!-- Single style with triggers; no Style= attribute -->
+        <Button.Style>
+          <Style TargetType="Button" BasedOn="{StaticResource PrimaryBtn}">
+            <Style.Triggers>
+              <DataTrigger Binding="{Binding ElementName=AddRadio, Path=IsChecked}" Value="True">
+                <Setter Property="BorderThickness" Value="3"/>
+              </DataTrigger>
+              <DataTrigger Binding="{Binding ElementName=AddRadio, Path=IsChecked}" Value="False">
+                <Setter Property="BorderThickness" Value="0"/>
+              </DataTrigger>
+            </Style.Triggers>
+          </Style>
+        </Button.Style>
+      </Button>
+
+      <Button x:Name="RemoveShortcutsBtn"
+              Content="Remove Shortcut(s)"
+              Click="mode_remove">
+        <Button.Style>
+          <Style TargetType="Button" BasedOn="{StaticResource SecondaryBtn}">
+            <Style.Triggers>
+              <DataTrigger Binding="{Binding ElementName=RemoveRadio, Path=IsChecked}" Value="True">
+                <Setter Property="BorderThickness" Value="3"/>
+              </DataTrigger>
+              <DataTrigger Binding="{Binding ElementName=RemoveRadio, Path=IsChecked}" Value="False">
+                <Setter Property="BorderThickness" Value="0"/>
+              </DataTrigger>
+            </Style.Triggers>
+          </Style>
+        </Button.Style>
+      </Button>
+    </StackPanel>
+
+    <!-- Hidden radios used by your script and to drive selected state -->
+    <StackPanel Grid.Row="2" Orientation="Horizontal" Visibility="Collapsed">
+      <RadioButton x:Name="AddRadio"    Content="Add"    IsChecked="True"/>
+      <RadioButton x:Name="RemoveRadio" Content="Remove" Margin="12,0,0,0"/>
+    </StackPanel>
+
+    <!-- Content Panels -->
+    <Grid Grid.Row="3">
+      <!-- ADD PANEL -->
+      <StackPanel x:Name="AddPanel" Orientation="Vertical">
+        <TextBlock Text="Shortcut label" FontFamily="Segoe UI" FontSize="13" Margin="0,8,0,4" FontWeight="SemiBold"/>
+        <TextBox x:Name="LabelInput" MinWidth="380" Padding="8" FontSize="14" />
+        <CheckBox x:Name="ReloadCheck" Content="Reload pyRevit after creation"
+                  IsChecked="True" Visibility="Collapsed" Margin="0,8,0,0"/>
+      </StackPanel>
+
+      <!-- REMOVE PANEL -->
+      <StackPanel x:Name="RemovePanel" Orientation="Vertical" Visibility="Collapsed">
+        <DockPanel LastChildFill="True" Margin="0,0,0,6">
+          <TextBlock Text="Existing shortcuts" FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold" DockPanel.Dock="Left"/>
+          <Button Content="Refresh" Width="80" Height="28" Margin="8,0,0,0"
+                  DockPanel.Dock="Right" Click="refresh_remove_list"/>
+        </DockPanel>
+        <ListBox x:Name="RemoveList" MinHeight="220" MinWidth="420" SelectionMode="Extended"/>
+        <CheckBox x:Name="ReloadCheckRemove" Content="Reload pyRevit after removal"
+                  IsChecked="True" Visibility="Collapsed" Margin="0,8,0,0"/>
+      </StackPanel>
+    </Grid>
+
+    <!-- Bottom action bar -->
+    <DockPanel Grid.Row="4" Margin="0,14,0,0">
+      <Button x:Name="CancelBtn" Content="Cancel" Width="100" Style="{StaticResource ActionBtn}"
+              Background="#E5E7EB" Foreground="#111111" Click="cancel" DockPanel.Dock="Left"/>
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+        <Button x:Name="RemoveSelectedBtn" Content="Remove Selected" Width="150"
+                Style="{StaticResource ActionBtn}" Background="#EF4444" Foreground="White"
+                Visibility="Collapsed" Click="remove" Margin="0,0,8,0"/>
+        <Button x:Name="CreateBtn" Content="Create Shortcut" Width="150"
+                Style="{StaticResource ActionBtn}" Background="#111827" Foreground="White"
+                Click="create"/>
+      </StackPanel>
+    </DockPanel>
+  </Grid>
+</Window>
