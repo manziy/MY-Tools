@@ -1,0 +1,110 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Create Link Button"
+        SizeToContent="Width"
+        Height="420"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
+        ShowInTaskbar="False" Topmost="True" Background="#FFFFFF"
+        UseLayoutRounding="True" SnapsToDevicePixels="True"
+        TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="Auto">
+
+    <!-- Flat layout with a minimalist 1px outline and inner padding -->
+    <Border BorderBrush="#E5E7EB" BorderThickness="1" Padding="16">
+        <!-- Two columns:
+             col 0 = content (auto width = width of text boxes)
+             col 1 = flexible filler (so window hugs content equally left/right) -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>   <!-- header -->
+                <RowDefinition Height="12"/>
+                <RowDefinition Height="Auto"/>   <!-- Button name label -->
+                <RowDefinition Height="Auto"/>   <!-- Button name box -->
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="Auto"/>   <!-- Target label -->
+                <RowDefinition Height="Auto"/>   <!-- Target box -->
+                <RowDefinition Height="8"/>
+                <RowDefinition Height="Auto"/>   <!-- Pick buttons -->
+                <RowDefinition Height="32"/>     <!-- spacer to push actions further down -->
+                <RowDefinition Height="*"/>      <!-- flexible spacer to bottom -->
+                <RowDefinition Height="Auto"/>   <!-- actions (aligned to LabelBox right edge) -->
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <StackPanel Grid.ColumnSpan="2" Orientation="Vertical">
+                <TextBlock Text="Create Link Button" FontSize="20" FontWeight="SemiBold" Foreground="#111827"/>
+                <TextBlock Text="Generate a shortcut button that opens a URL, file, or folder."
+                           Margin="0,2,0,0" Foreground="#6B7280"/>
+            </StackPanel>
+
+            <!-- Button name -->
+            <TextBlock Grid.Row="2" Grid.Column="0"
+                       Text="Button name" Foreground="#374151" FontSize="16"/>
+            <TextBox x:Name="LabelBox" Grid.Row="3" Grid.Column="0"
+                     Width="360" Height="40" FontSize="14" Padding="10,8"
+                     HorizontalAlignment="Left" VerticalContentAlignment="Center"
+                     BorderBrush="#D1D5DB" Background="#FFFFFF"/>
+
+            <!-- Target -->
+            <TextBlock Grid.Row="5" Grid.Column="0"
+                       Text="Target (URL / file / folder)" Foreground="#374151" FontSize="16"/>
+            <TextBox x:Name="PathBox" Grid.Row="6" Grid.Column="0"
+                     Width="360" Height="40" FontSize="14" Padding="10,8"
+                     HorizontalAlignment="Left" VerticalContentAlignment="Center"
+                     BorderBrush="#D1D5DB" Background="#FFFFFF"/>
+
+            <!-- Pick buttons (one line), aligned under target box -->
+            <StackPanel Grid.Row="8" Grid.Column="0"
+                        Orientation="Horizontal" VerticalAlignment="Center">
+                <Button x:Name="PickFileBtn"  Content="Pick File…"   Height="36" Width="120" Margin="0,0,8,0" Cursor="Hand" FontSize="16">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border CornerRadius="8" Background="#E5E7EB" BorderBrush="#D1D5DB" BorderThickness="1">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" TextElement.FontSize="16"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <Button x:Name="PickFolderBtn" Content="Pick Folder…" Height="36" Width="140" Cursor="Hand" FontSize="16">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border CornerRadius="8" Background="#E5E7EB" BorderBrush="#D1D5DB" BorderThickness="1">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" TextElement.FontSize="16"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </StackPanel>
+
+            <!-- Actions aligned to the right edge of LabelBox (col 0), pushed lower -->
+            <StackPanel Grid.Row="11" Grid.Column="0"
+                        Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                <!-- Cancel: black background, white text -->
+                <Button x:Name="CancelBtn" Content="Cancel" Width="110" Height="38" Margin="0,0,10,0" IsCancel="True" Cursor="Hand" FontSize="16">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border CornerRadius="10" Background="#000000" BorderBrush="#000000" BorderThickness="1">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" TextElement.FontSize="16" TextElement.Foreground="White"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <!-- Create: existing yellow primary -->
+                <Button x:Name="CreateBtn" Content="Create" Width="130" Height="38" IsDefault="True" Cursor="Hand" IsEnabled="False" FontSize="16">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border CornerRadius="10" Background="#FFAE00">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" TextElement.Foreground="White" TextElement.FontSize="16"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>
