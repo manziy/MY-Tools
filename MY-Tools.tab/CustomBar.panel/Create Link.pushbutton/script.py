@@ -50,7 +50,34 @@ def _pulldown_title_for(kind):
     return {'url': 'CustomBarURL', 'file': 'CustomBarFile', 'folder': 'CustomBarFolder'}.get(kind, 'CustomBarFolder')
 
 def _pick_icon_path(generator_dir, kind):
-    for name in ([kind + '.png'] if kind in ('url', 'file', 'folder') else []) + ['icon.png']:
+    """Pick icon depending on Revit theme.
+    If Revit is in dark theme, try `<kind>.dark.png` and `icon.dark.png` first.
+    Then fall back to normal names.
+    """
+    is_dark = False
+    try:
+        import clr
+        clr.AddReference('AdWindows')
+        from Autodesk.Windows import ComponentManager, UITheme
+        is_dark = (ComponentManager.UITheme == UITheme.Dark)
+    except Exception:
+        # If we can't detect, just treat as light
+        pass
+
+    candidates = []
+
+    # specific kind first
+    if kind in ('url', 'file', 'folder'):
+        if is_dark:
+            candidates.append(kind + '.dark.png')
+        candidates.append(kind + '.png')
+
+    # generic icon
+    if is_dark:
+        candidates.append('icon.dark.png')
+    candidates.append('icon.png')
+
+    for name in candidates:
         p = os.path.join(generator_dir, name)
         if os.path.isfile(p):
             return p
